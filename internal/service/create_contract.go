@@ -11,7 +11,7 @@ import (
 )
 
 type CreateContractRequest struct {
-	CompanyID uuid.UUID
+	CompanyID string
 	StartsAt  time.Time
 	ExpiresAt *time.Time
 	Options   []string
@@ -19,7 +19,7 @@ type CreateContractRequest struct {
 
 type CreateContractResponse struct {
 	ID        uuid.UUID
-	CompanyID uuid.UUID
+	CompanyID string
 	Status    string
 	StartsAt  time.Time
 	ExpiresAt *time.Time

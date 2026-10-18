@@ -8,7 +8,7 @@ import (
 
 type Contract struct {
 	ID        uuid.UUID
-	CompanyID uuid.UUID
+	CompanyID string
 	Status    string
 	StartsAt  time.Time
 	ExpiresAt *time.Time

@@ -213,11 +213,11 @@ components:
       properties:
         company_id:
           x-oapi-codegen-extra-tags:
-            valid: "nonzeroUUID~company_id обязателен"
+            valid: "required~company_id обязателен"
           x-go-name: CompanyID
           type: string
-          format: uuid
-          example: 'a1b2c3d4-1111-4111-8111-123456789abc'
+          minLength: 1
+          example: company-acme
         starts_at:
           x-oapi-codegen-extra-tags:
             valid: "required~starts_at обязателен"
@@ -246,8 +246,8 @@ components:
         company_id:
           x-go-name: CompanyID
           type: string
-          format: uuid
-          example: 'a1b2c3d4-1111-4111-8111-123456789abc'
+          minLength: 1
+          example: company-acme
         status:
           type: string
           enum: [draft, active, suspended, terminated]
@@ -271,11 +271,11 @@ components:
       properties:
         company_id:
           x-oapi-codegen-extra-tags:
-            valid: "nonzeroUUID~company_id обязателен"
+            valid: "required~company_id обязателен"
           x-go-name: CompanyID
           type: string
-          format: uuid
-          example: 'a1b2c3d4-1111-4111-8111-123456789abc'
+          minLength: 1
+          example: company-acme
         option_code:
           x-oapi-codegen-extra-tags:
             valid: "required~option_code обязателен,in(trip_creation|trip_participants|notifications)~UNKNOWN_SERVICE"
@@ -311,11 +311,11 @@ components:
       properties:
         company_id:
           x-oapi-codegen-extra-tags:
-            valid: "nonzeroUUID~company_id обязателен"
+            valid: "required~company_id обязателен"
           x-go-name: CompanyID
           type: string
-          format: uuid
-          example: 'a1b2c3d4-1111-4111-8111-123456789abc'
+          minLength: 1
+          example: company-acme
     ActivateContractResponse:
       type: object
       additionalProperties: false
@@ -339,8 +339,8 @@ components:
         company_id:
           x-go-name: CompanyID
           type: string
-          format: uuid
-          example: 'a1b2c3d4-1111-4111-8111-123456789abc'
+          minLength: 1
+          example: company-acme
         status:
           type: string
           enum: [draft, active, suspended, terminated]
@@ -370,8 +370,8 @@ components:
         company_id:
           x-go-name: CompanyID
           type: string
-          format: uuid
-          example: 'a1b2c3d4-1111-4111-8111-123456789abc'
+          minLength: 1
+          example: company-acme
         status:
           type: string
           enum: [draft, active, suspended, terminated]
@@ -401,8 +401,8 @@ components:
         company_id:
           x-go-name: CompanyID
           type: string
-          format: uuid
-          example: 'a1b2c3d4-1111-4111-8111-123456789abc'
+          minLength: 1
+          example: company-acme
         status:
           type: string
           enum: [draft, active, suspended, terminated]

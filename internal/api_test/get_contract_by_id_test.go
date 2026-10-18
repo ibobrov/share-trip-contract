@@ -42,7 +42,7 @@ func TestServer_GetContractById(t *testing.T) {
 	startsAt := time.Now().UTC().Truncate(time.Second)
 	expiresAt := startsAt.AddDate(1, 0, 0)
 	created := sendCreateContractRequest(t, fiber.StatusCreated, gen.CreateContractRequest{
-		CompanyID: uuid.New(),
+		CompanyID: "company-" + uuid.NewString(),
 		StartsAt:  startsAt,
 		ExpiresAt: &expiresAt,
 		Options: gen.ContractOptions{
@@ -92,7 +92,7 @@ func TestServer_GetContractById_Validation(t *testing.T) {
 func TestServer_GetContractById_IndefiniteReturnsNull(t *testing.T) {
 	t.Parallel()
 
-	contract := createDraftContract(t, uuid.New())
+	contract := createDraftContract(t, "company-"+uuid.NewString())
 
 	// RawMessage отличает явный null от отсутствующего поля.
 	type expirationTestResponse struct {

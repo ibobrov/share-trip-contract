@@ -71,7 +71,7 @@ func runTests(m *testing.M) int {
 		log.Print(err)
 		return 1
 	}
-	// Проверяем применение, откат и повторное применение обеих миграций.
+	// Проверяем применение, откат и повторное применение миграций.
 	if err := goose.DownTo(db, "../../migrations", 0); err != nil {
 		log.Print(err)
 		return 1

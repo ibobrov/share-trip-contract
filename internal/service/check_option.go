@@ -4,13 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/ibobrov/share-trip-contract/internal/domain"
 	"github.com/jackc/pgx/v5"
 )
 
 type CheckOptionRequest struct {
-	CompanyID  uuid.UUID
+	CompanyID  string
 	OptionCode string
 }
 

@@ -37,12 +37,12 @@ func (r *ContractRepository) Get(ctx context.Context, tx pgx.Tx, id uuid.UUID, l
 
 // Active returns the contract by status, including expired and future contracts.
 // The domain decides whether its dates permit the requested operation.
-func (r *ContractRepository) Active(ctx context.Context, tx pgx.Tx, companyID uuid.UUID) (entity.Contract, error) {
+func (r *ContractRepository) Active(ctx context.Context, tx pgx.Tx, companyID string) (entity.Contract, error) {
 	return r.scan(ctx, tx, tx.QueryRow(ctx, `SELECT id, company_id, status, starts_at, expires_at
         FROM contracts WHERE company_id = $1 AND status = 'active'`, companyID))
 }
 
-func (r *ContractRepository) CompanyHasContracts(ctx context.Context, tx pgx.Tx, companyID uuid.UUID) (bool, error) {
+func (r *ContractRepository) CompanyHasContracts(ctx context.Context, tx pgx.Tx, companyID string) (bool, error) {
 	var exists bool
 	err := tx.QueryRow(ctx, `SELECT EXISTS (SELECT FROM contracts WHERE company_id = $1)`, companyID).Scan(&exists)
 	return exists, err

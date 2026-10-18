@@ -1,7 +1,7 @@
 -- +goose Up
 CREATE TABLE contracts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    company_id UUID NOT NULL,
+    company_id TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'draft',
     starts_at TIMESTAMPTZ NOT NULL,
     expires_at TIMESTAMPTZ,

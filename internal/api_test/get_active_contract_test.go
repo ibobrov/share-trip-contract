@@ -37,7 +37,7 @@ func sendGetActiveContractRequest(
 func TestServer_GetActiveContract(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	contract := createDraftContract(t, companyID)
 	activated := sendActivateContractRequest(t, fiber.StatusCreated, gen.ActivateContractRequest{
 		ID: contract.ID,
@@ -62,7 +62,7 @@ func TestServer_GetActiveContract_NotFound(t *testing.T) {
 	t.Parallel()
 
 	response := sendGetActiveContractRequest(t, fiber.StatusNotFound, gen.GetActiveContractRequest{
-		CompanyID: uuid.New(),
+		CompanyID: "company-" + uuid.NewString(),
 	})
 
 	require.Nil(t, response.Data)
@@ -85,7 +85,7 @@ func TestServer_GetActiveContract_InactiveStatus(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			companyID := uuid.New()
+			companyID := "company-" + uuid.NewString()
 			contract := createDraftContract(t, companyID)
 			setContractStatus(t, contract.ID, tt.status)
 
@@ -102,7 +102,7 @@ func TestServer_GetActiveContract_InactiveStatus(t *testing.T) {
 func TestServer_GetActiveContract_Expired(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	startsAt := time.Now().UTC().Add(-2 * time.Hour)
 	expiresAt := startsAt.Add(time.Hour)
 	created := sendCreateContractRequest(t, fiber.StatusCreated, gen.CreateContractRequest{
@@ -125,7 +125,7 @@ func TestServer_GetActiveContract_Expired(t *testing.T) {
 func TestServer_GetActiveContract_FutureStart(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	startsAt := time.Now().UTC().Add(time.Hour).Truncate(time.Second)
 	created := sendCreateContractRequest(t, fiber.StatusCreated, gen.CreateContractRequest{
 		CompanyID: companyID,

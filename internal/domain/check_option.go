@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/ibobrov/share-trip-contract/internal/repository/entity"
 	"github.com/jackc/pgx/v5"
 )
 
 type CheckOptionRequest struct {
-	CompanyID  uuid.UUID
+	CompanyID  string
 	OptionCode string
 }
 type CheckOptionResponse struct {

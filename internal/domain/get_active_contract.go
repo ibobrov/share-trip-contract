@@ -11,11 +11,11 @@ import (
 )
 
 type GetActiveContractRequest struct {
-	CompanyID uuid.UUID
+	CompanyID string
 }
 type GetActiveContractResponse struct {
 	ID        uuid.UUID
-	CompanyID uuid.UUID
+	CompanyID string
 	Status    string
 	StartsAt  time.Time
 	ExpiresAt *time.Time

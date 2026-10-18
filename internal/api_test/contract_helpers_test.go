@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createDraftContract(t *testing.T, companyID uuid.UUID) *gen.CreateContractResponse {
+func createDraftContract(t *testing.T, companyID string) *gen.CreateContractResponse {
 	t.Helper()
 
 	response := sendCreateContractRequest(t, fiber.StatusCreated, gen.CreateContractRequest{

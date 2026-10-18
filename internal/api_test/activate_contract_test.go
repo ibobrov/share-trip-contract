@@ -39,7 +39,7 @@ func sendActivateContractRequest(
 func TestServer_ActivateContract(t *testing.T) {
 	t.Parallel()
 
-	contract := createDraftContract(t, uuid.New())
+	contract := createDraftContract(t, "company-"+uuid.NewString())
 
 	response := sendActivateContractRequest(t, fiber.StatusCreated, gen.ActivateContractRequest{
 		ID: contract.ID,
@@ -86,7 +86,7 @@ func TestServer_ActivateContract_InvalidStatus(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			contract := createDraftContract(t, uuid.New())
+			contract := createDraftContract(t, "company-"+uuid.NewString())
 			setContractStatus(t, contract.ID, tt.status)
 
 			response := sendActivateContractRequest(t, fiber.StatusConflict, gen.ActivateContractRequest{
@@ -111,7 +111,7 @@ func TestServer_ActivateContract_InvalidStatus(t *testing.T) {
 func TestServer_ActivateContract_AnotherActiveContract(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	activeContract := createDraftContract(t, companyID)
 	activated := sendActivateContractRequest(t, fiber.StatusCreated, gen.ActivateContractRequest{
 		ID: activeContract.ID,
@@ -149,7 +149,7 @@ func TestServer_ActivateContract_Validation(t *testing.T) {
 func TestServer_ActivateContract_ConcurrentContracts(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	first := createDraftContract(t, companyID)
 	second := createDraftContract(t, companyID)
 
@@ -170,7 +170,7 @@ func TestServer_ActivateContract_ConcurrentContracts(t *testing.T) {
 func TestServer_ActivateContract_ConcurrentSameContract(t *testing.T) {
 	t.Parallel()
 
-	contract := createDraftContract(t, uuid.New())
+	contract := createDraftContract(t, "company-"+uuid.NewString())
 
 	statuses := sendConcurrentActivationRequests(t, []uuid.UUID{contract.ID, contract.ID})
 

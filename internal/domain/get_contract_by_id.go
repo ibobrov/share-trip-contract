@@ -15,7 +15,7 @@ type GetContractByIdRequest struct {
 }
 type GetContractByIdResponse struct {
 	ID        uuid.UUID
-	CompanyID uuid.UUID
+	CompanyID string
 	Status    string
 	StartsAt  time.Time
 	ExpiresAt *time.Time

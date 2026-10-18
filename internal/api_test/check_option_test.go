@@ -36,7 +36,7 @@ func sendCheckOptionRequest(
 func TestServer_CheckOption_Allowed(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	contract := createDraftContract(t, companyID)
 	activated := sendActivateContractRequest(t, fiber.StatusCreated, gen.ActivateContractRequest{
 		ID: contract.ID,
@@ -58,7 +58,7 @@ func TestServer_CheckOption_ContractNotFound(t *testing.T) {
 	t.Parallel()
 
 	response := sendCheckOptionRequest(t, fiber.StatusOK, gen.CheckOptionRequest{
-		CompanyID:  uuid.New(),
+		CompanyID:  "company-" + uuid.NewString(),
 		OptionCode: gen.TripCreation,
 	})
 
@@ -85,7 +85,7 @@ func TestServer_CheckOption_NoActiveContract(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			companyID := uuid.New()
+			companyID := "company-" + uuid.NewString()
 			contract := createDraftContract(t, companyID)
 			setContractStatus(t, contract.ID, tt.status)
 
@@ -106,7 +106,7 @@ func TestServer_CheckOption_NoActiveContract(t *testing.T) {
 func TestServer_CheckOption_NotStarted(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	created := sendCreateContractRequest(t, fiber.StatusCreated, gen.CreateContractRequest{
 		CompanyID: companyID,
 		StartsAt:  time.Now().UTC().Add(time.Hour),
@@ -130,7 +130,7 @@ func TestServer_CheckOption_NotStarted(t *testing.T) {
 func TestServer_CheckOption_Expired(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	startsAt := time.Now().UTC().Add(-2 * time.Hour)
 	expiresAt := startsAt.Add(time.Hour)
 	created := sendCreateContractRequest(t, fiber.StatusCreated, gen.CreateContractRequest{
@@ -157,7 +157,7 @@ func TestServer_CheckOption_Expired(t *testing.T) {
 func TestServer_CheckOption_MissingOption(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	contract := createDraftContract(t, companyID)
 	setContractStatus(t, contract.ID, "active")
 
@@ -176,7 +176,7 @@ func TestServer_CheckOption_MissingOption(t *testing.T) {
 func TestServer_CheckOption_DisabledOption(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	contract := createDraftContract(t, companyID)
 	setContractStatus(t, contract.ID, "active")
 
@@ -211,7 +211,7 @@ func TestServer_CheckOption_Validation(t *testing.T) {
 		{
 			name: "компания не указана",
 			change: func(request *gen.CheckOptionRequest) {
-				request.CompanyID = uuid.Nil
+				request.CompanyID = ""
 			},
 			expectedError: "company_id обязателен",
 		},
@@ -236,7 +236,7 @@ func TestServer_CheckOption_Validation(t *testing.T) {
 			t.Parallel()
 
 			request := gen.CheckOptionRequest{
-				CompanyID:  uuid.New(),
+				CompanyID:  "company-" + uuid.NewString(),
 				OptionCode: gen.TripCreation,
 			}
 			tt.change(&request)

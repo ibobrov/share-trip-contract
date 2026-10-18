@@ -38,7 +38,7 @@ func sendCreateContractRequest(
 func TestServer_CreateContract(t *testing.T) {
 	t.Parallel()
 
-	companyID := uuid.New()
+	companyID := "company-" + uuid.NewString()
 	startsAt := time.Now().UTC().Truncate(time.Second)
 	expiresAt := startsAt.AddDate(1, 0, 0)
 	options := gen.ContractOptions{
@@ -64,7 +64,7 @@ func TestServer_CreateContract(t *testing.T) {
 	require.ElementsMatch(t, options, response.Data.Options)
 
 	// Проверяем сохранённый договор и включённые услуги.
-	var savedCompanyID uuid.UUID
+	var savedCompanyID string
 	var savedStatus string
 	var savedStartsAt time.Time
 	var savedExpiresAt *time.Time
@@ -98,7 +98,7 @@ func TestServer_CreateContract_Indefinite(t *testing.T) {
 	t.Parallel()
 
 	response := sendCreateContractRequest(t, fiber.StatusCreated, gen.CreateContractRequest{
-		CompanyID: uuid.New(),
+		CompanyID: "company-" + uuid.NewString(),
 		StartsAt:  time.Now().UTC(),
 		Options: gen.ContractOptions{
 			{Code: gen.TripCreation},
@@ -130,7 +130,7 @@ func TestServer_CreateContract_TransportValidation(t *testing.T) {
 		{
 			name: "компания не указана",
 			change: func(request *gen.CreateContractRequest) {
-				request.CompanyID = uuid.Nil
+				request.CompanyID = ""
 			},
 			errorContains: "company_id обязателен",
 		},
@@ -169,7 +169,7 @@ func TestServer_CreateContract_TransportValidation(t *testing.T) {
 			t.Parallel()
 
 			request := gen.CreateContractRequest{
-				CompanyID: uuid.New(),
+				CompanyID: "company-" + uuid.NewString(),
 				StartsAt:  time.Now().UTC(),
 				Options:   gen.ContractOptions{{Code: gen.TripCreation}},
 			}
@@ -233,7 +233,7 @@ func TestServer_CreateContract_BusinessValidation(t *testing.T) {
 			t.Parallel()
 
 			request := gen.CreateContractRequest{
-				CompanyID: uuid.New(),
+				CompanyID: "company-" + uuid.NewString(),
 				StartsAt:  time.Now().UTC(),
 				Options:   gen.ContractOptions{{Code: gen.TripCreation}},
 			}
@@ -265,8 +265,8 @@ func TestServer_CreateContract_InvalidJSON(t *testing.T) {
 		body json.RawMessage
 	}{
 		{
-			name: "UUID некорректен",
-			body: json.RawMessage(`{"company_id":"not-a-uuid"}`),
+			name: "company_id должен быть строкой",
+			body: json.RawMessage(`{"company_id":42}`),
 		},
 		{
 			name: "дата некорректна",

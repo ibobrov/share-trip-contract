@@ -185,8 +185,8 @@ type CheckOptionHTTPResponse struct {
 
 // CheckOptionRequest defines model for CheckOptionRequest.
 type CheckOptionRequest struct {
-	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id" valid:"nonzeroUUID~company_id обязателен"`
+	// CompanyID Example: company-acme
+	CompanyID string `json:"company_id" valid:"required~company_id обязателен"`
 
 	// OptionCode Код услуги.
 	//
@@ -205,8 +205,8 @@ type CheckOptionResponseReason string
 
 // Contract defines model for Contract.
 type Contract struct {
-	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id"`
+	// CompanyID Example: company-acme
+	CompanyID string `json:"company_id"`
 
 	// ExpiresAt null для бессрочного договора.
 	//
@@ -250,8 +250,8 @@ type CreateContractHTTPResponse struct {
 
 // CreateContractRequest defines model for CreateContractRequest.
 type CreateContractRequest struct {
-	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id" valid:"nonzeroUUID~company_id обязателен"`
+	// CompanyID Example: company-acme
+	CompanyID string `json:"company_id" valid:"required~company_id обязателен"`
 
 	// ExpiresAt Позже starts_at. Без поля договор бессрочный.
 	//
@@ -267,8 +267,8 @@ type CreateContractRequest struct {
 
 // CreateContractResponse defines model for CreateContractResponse.
 type CreateContractResponse struct {
-	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id"`
+	// CompanyID Example: company-acme
+	CompanyID string `json:"company_id"`
 
 	// ExpiresAt null для бессрочного договора.
 	//
@@ -310,14 +310,14 @@ type GetActiveContractHTTPResponse struct {
 
 // GetActiveContractRequest defines model for GetActiveContractRequest.
 type GetActiveContractRequest struct {
-	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id" valid:"nonzeroUUID~company_id обязателен"`
+	// CompanyID Example: company-acme
+	CompanyID string `json:"company_id" valid:"required~company_id обязателен"`
 }
 
 // GetActiveContractResponse defines model for GetActiveContractResponse.
 type GetActiveContractResponse struct {
-	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id"`
+	// CompanyID Example: company-acme
+	CompanyID string `json:"company_id"`
 
 	// ExpiresAt null для бессрочного договора.
 	//
@@ -356,8 +356,8 @@ type GetContractByIdRequest struct {
 
 // GetContractByIdResponse defines model for GetContractByIdResponse.
 type GetContractByIdResponse struct {
-	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id"`
+	// CompanyID Example: company-acme
+	CompanyID string `json:"company_id"`
 
 	// ExpiresAt null для бессрочного договора.
 	//
