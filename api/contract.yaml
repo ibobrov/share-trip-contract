@@ -148,6 +148,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CheckOptionHTTPResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '500':
           $ref: '#/components/responses/InternalError'
 components:
@@ -194,6 +196,8 @@ components:
       required: [code]
       properties:
         code:
+          x-oapi-codegen-extra-tags:
+            valid: "required~код услуги обязателен,in(trip_creation|trip_participants|notifications)~неизвестная услуга"
           $ref: '#/components/schemas/OptionCode'
     ContractOptions:
       type: array
@@ -208,11 +212,15 @@ components:
       required: [company_id, starts_at, options]
       properties:
         company_id:
+          x-oapi-codegen-extra-tags:
+            valid: "nonzeroUUID~company_id обязателен"
           x-go-name: CompanyID
           type: string
           format: uuid
           example: 'a1b2c3d4-1111-4111-8111-123456789abc'
         starts_at:
+          x-oapi-codegen-extra-tags:
+            valid: "required~starts_at обязателен"
           type: string
           format: date-time
           example: '2026-11-01T00:00:00+03:00'
@@ -222,6 +230,8 @@ components:
           description: Позже starts_at. Без поля договор бессрочный.
           example: '2027-11-01T00:00:00+03:00'
         options:
+          x-oapi-codegen-extra-tags:
+            valid: "required~список options не должен быть пустым"
           $ref: '#/components/schemas/ContractOptions'
     Contract:
       type: object
@@ -260,11 +270,15 @@ components:
       required: [company_id, option_code]
       properties:
         company_id:
+          x-oapi-codegen-extra-tags:
+            valid: "nonzeroUUID~company_id обязателен"
           x-go-name: CompanyID
           type: string
           format: uuid
           example: 'a1b2c3d4-1111-4111-8111-123456789abc'
         option_code:
+          x-oapi-codegen-extra-tags:
+            valid: "required~option_code обязателен,in(trip_creation|trip_participants|notifications)~UNKNOWN_SERVICE"
           $ref: '#/components/schemas/OptionCode'
     ActivateContractRequest:
       type: object
@@ -272,6 +286,8 @@ components:
       required: [id]
       properties:
         id:
+          x-oapi-codegen-extra-tags:
+            valid: "nonzeroUUID~id обязателен"
           x-go-name: ID
           type: string
           format: uuid
@@ -282,6 +298,8 @@ components:
       required: [id]
       properties:
         id:
+          x-oapi-codegen-extra-tags:
+            valid: "nonzeroUUID~id обязателен"
           x-go-name: ID
           type: string
           format: uuid
@@ -292,6 +310,8 @@ components:
       required: [company_id]
       properties:
         company_id:
+          x-oapi-codegen-extra-tags:
+            valid: "nonzeroUUID~company_id обязателен"
           x-go-name: CompanyID
           type: string
           format: uuid

@@ -165,7 +165,7 @@ type ActivateContractHTTPResponse struct {
 // ActivateContractRequest defines model for ActivateContractRequest.
 type ActivateContractRequest struct {
 	// ID Example: b2c3d4e5-2222-4222-8222-23456789abcd
-	ID openapi_types.UUID `json:"id"`
+	ID openapi_types.UUID `json:"id" valid:"nonzeroUUID~id обязателен"`
 }
 
 // ActivateContractResponse defines model for ActivateContractResponse.
@@ -186,12 +186,12 @@ type CheckOptionHTTPResponse struct {
 // CheckOptionRequest defines model for CheckOptionRequest.
 type CheckOptionRequest struct {
 	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id"`
+	CompanyID openapi_types.UUID `json:"company_id" valid:"nonzeroUUID~company_id обязателен"`
 
 	// OptionCode Код услуги.
 	//
 	// Example: trip_creation
-	OptionCode OptionCode `json:"option_code"`
+	OptionCode OptionCode `json:"option_code" valid:"required~option_code обязателен,in(trip_creation|trip_participants|notifications)~UNKNOWN_SERVICE"`
 }
 
 // CheckOptionResponse При allowed=true причина отсутствует; при allowed=false обязательна.
@@ -234,7 +234,7 @@ type ContractOption struct {
 	// Code Код услуги.
 	//
 	// Example: trip_creation
-	Code OptionCode `json:"code"`
+	Code OptionCode `json:"code" valid:"required~код услуги обязателен,in(trip_creation|trip_participants|notifications)~неизвестная услуга"`
 }
 
 // ContractOptions Непустой список с уникальными кодами услуг.
@@ -251,7 +251,7 @@ type CreateContractHTTPResponse struct {
 // CreateContractRequest defines model for CreateContractRequest.
 type CreateContractRequest struct {
 	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id"`
+	CompanyID openapi_types.UUID `json:"company_id" valid:"nonzeroUUID~company_id обязателен"`
 
 	// ExpiresAt Позже starts_at. Без поля договор бессрочный.
 	//
@@ -259,10 +259,10 @@ type CreateContractRequest struct {
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
 
 	// Options Непустой список с уникальными кодами услуг.
-	Options ContractOptions `json:"options"`
+	Options ContractOptions `json:"options" valid:"required~список options не должен быть пустым"`
 
 	// StartsAt Example: 2026-11-01T00:00:00+03:00
-	StartsAt time.Time `json:"starts_at"`
+	StartsAt time.Time `json:"starts_at" valid:"required~starts_at обязателен"`
 }
 
 // CreateContractResponse defines model for CreateContractResponse.
@@ -311,7 +311,7 @@ type GetActiveContractHTTPResponse struct {
 // GetActiveContractRequest defines model for GetActiveContractRequest.
 type GetActiveContractRequest struct {
 	// CompanyID Example: a1b2c3d4-1111-4111-8111-123456789abc
-	CompanyID openapi_types.UUID `json:"company_id"`
+	CompanyID openapi_types.UUID `json:"company_id" valid:"nonzeroUUID~company_id обязателен"`
 }
 
 // GetActiveContractResponse defines model for GetActiveContractResponse.
@@ -351,7 +351,7 @@ type GetContractByIdHTTPResponse struct {
 // GetContractByIdRequest defines model for GetContractByIdRequest.
 type GetContractByIdRequest struct {
 	// ID Example: b2c3d4e5-2222-4222-8222-23456789abcd
-	ID openapi_types.UUID `json:"id"`
+	ID openapi_types.UUID `json:"id" valid:"nonzeroUUID~id обязателен"`
 }
 
 // GetContractByIdResponse defines model for GetContractByIdResponse.

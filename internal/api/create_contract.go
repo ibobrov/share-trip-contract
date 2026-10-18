@@ -2,30 +2,43 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"github.com/ibobrov/share-trip-contract/gen"
+	"github.com/ibobrov/share-trip-contract/internal/service"
 )
 
 func (s *Server) CreateContract(c *fiber.Ctx) error {
+	logger := handlerLogger(c, "CreateContract")
 	var req gen.CreateContractRequest
-
-	if err := c.BodyParser(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(gen.Response{
-			Data:   nil,
-			Errors: []string{"Некорректный запрос."},
+	if ok, err := ParseAndValidateRequest(&req, c, logger); !ok {
+		return err
+	}
+	options := make([]string, 0, len(req.Options))
+	for _, option := range req.Options {
+		options = append(options, string(option.Code))
+	}
+	res, err := s.contractService.CreateContract(c.UserContext(), service.CreateContractRequest{
+		CompanyID: req.CompanyID,
+		StartsAt:  req.StartsAt,
+		ExpiresAt: req.ExpiresAt,
+		Options:   options,
+	})
+	if err != nil {
+		return HandleError(c, err)
+	}
+	responseOptions := make(gen.ContractOptions, 0, len(res.Options))
+	for _, code := range res.Options {
+		responseOptions = append(responseOptions, gen.ContractOption{
+			Code: gen.OptionCode(code),
 		})
 	}
 
-	// Заглушка: сохранение договора в БД пока не реализовано.
-	return c.Status(fiber.StatusCreated).JSON(gen.Response{
-		Data: gen.CreateContractResponse{
-			ID:        uuid.New(),
-			CompanyID: req.CompanyID,
-			Status:    "draft",
-			StartsAt:  req.StartsAt,
-			ExpiresAt: req.ExpiresAt,
-			Options:   req.Options,
-		},
-		Errors: []string{},
+	logger.Info("contract created")
+	return SuccessWithHttpStatus(c, fiber.StatusCreated, gen.CreateContractResponse{
+		ID:        res.ID,
+		CompanyID: res.CompanyID,
+		Status:    gen.CreateContractResponseStatus(res.Status),
+		StartsAt:  res.StartsAt,
+		ExpiresAt: res.ExpiresAt,
+		Options:   responseOptions,
 	})
 }

@@ -1,37 +1,37 @@
 package api
 
 import (
-	"time"
-
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"github.com/ibobrov/share-trip-contract/gen"
+	"github.com/ibobrov/share-trip-contract/internal/service"
 )
 
 func (s *Server) GetContractById(c *fiber.Ctx) error {
+	logger := handlerLogger(c, "GetContractById")
 	var req gen.GetContractByIdRequest
-
-	if err := c.BodyParser(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(gen.Response{
-			Data:   nil,
-			Errors: []string{"Некорректный запрос."},
+	if ok, err := ParseAndValidateRequest(&req, c, logger); !ok {
+		return err
+	}
+	res, err := s.contractService.GetContractById(c.UserContext(), service.GetContractByIdRequest{
+		ID: req.ID,
+	})
+	if err != nil {
+		return HandleError(c, err)
+	}
+	responseOptions := make(gen.ContractOptions, 0, len(res.Options))
+	for _, code := range res.Options {
+		responseOptions = append(responseOptions, gen.ContractOption{
+			Code: gen.OptionCode(code),
 		})
 	}
 
-	// Временные данные для проверки API; чтение договора из БД пока не реализовано.
-	return c.Status(fiber.StatusOK).JSON(gen.Response{
-		Data: gen.GetContractByIdResponse{
-			ID:        req.ID,
-			CompanyID: uuid.New(),
-			Status:    "draft",
-			StartsAt:  time.Now(),
-			ExpiresAt: nil,
-			Options: gen.ContractOptions{
-				{Code: gen.TripCreation},
-				{Code: gen.TripParticipants},
-				{Code: gen.Notifications},
-			},
-		},
-		Errors: []string{},
+	logger.Info("contract retrieved")
+	return Success(c, gen.GetContractByIdResponse{
+		ID:        res.ID,
+		CompanyID: res.CompanyID,
+		Status:    gen.GetContractByIdResponseStatus(res.Status),
+		StartsAt:  res.StartsAt,
+		ExpiresAt: res.ExpiresAt,
+		Options:   responseOptions,
 	})
 }
