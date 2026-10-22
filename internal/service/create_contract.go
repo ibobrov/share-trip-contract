@@ -38,7 +38,7 @@ func (s *ContractService) CreateContract(
 			Options:   req.Options,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("usecase.CreateContract: %w", err)
+			return nil, fmt.Errorf("s.contractUseCase.CreateContract: %w", err)
 		}
 
 		return &CreateContractResponse{
@@ -51,7 +51,7 @@ func (s *ContractService) CreateContract(
 		}, nil
 	})
 	if err != nil {
-		return CreateContractResponse{}, err
+		return CreateContractResponse{}, fmt.Errorf("failed in transaction: %w", err)
 	}
 
 	return *result, nil

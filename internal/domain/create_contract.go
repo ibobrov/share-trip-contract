@@ -46,7 +46,7 @@ func (u *ContractUseCase) CreateContract(ctx context.Context, tx pgx.Tx, req Cre
 		contract.ExpiresAt = &t
 	}
 	if err := u.contractRepo.Create(ctx, tx, contract); err != nil {
-		return nil, fmt.Errorf("create contract: %w", err)
+		return nil, fmt.Errorf("u.contractRepo.Create: %w", err)
 	}
 	responseOptions := make([]string, 0, len(contract.Options))
 	for _, option := range contract.Options {
