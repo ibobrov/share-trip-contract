@@ -8,7 +8,7 @@ CREATE TABLE contract_options (
     CONSTRAINT contract_options_contract_id_fkey
         FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE,
     CONSTRAINT contract_options_code_check
-        CHECK (code IN ('trip_creation', 'trip_participants', 'notifications'))
+        CHECK (code IN ('trip_creation', 'trip_publication', 'trip_participants', 'notifications'))
 );
 
 -- +goose Down

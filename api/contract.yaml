@@ -187,7 +187,7 @@ components:
   schemas:
     OptionCode:
       type: string
-      enum: [trip_creation, trip_participants, notifications]
+      enum: [trip_creation, trip_publication, trip_participants, notifications]
       description: Код услуги.
       example: trip_creation
     ContractOption:
@@ -197,7 +197,7 @@ components:
       properties:
         code:
           x-oapi-codegen-extra-tags:
-            valid: "required~код услуги обязателен,in(trip_creation|trip_participants|notifications)~неизвестная услуга"
+            valid: "required~код услуги обязателен,in(trip_creation|trip_publication|trip_participants|notifications)~неизвестная услуга"
           $ref: '#/components/schemas/OptionCode'
     ContractOptions:
       type: array
@@ -278,7 +278,7 @@ components:
           example: company-acme
         option_code:
           x-oapi-codegen-extra-tags:
-            valid: "required~option_code обязателен,in(trip_creation|trip_participants|notifications)~UNKNOWN_SERVICE"
+            valid: "required~option_code обязателен,in(trip_creation|trip_publication|trip_participants|notifications)~UNKNOWN_SERVICE"
           $ref: '#/components/schemas/OptionCode'
     ActivateContractRequest:
       type: object
