@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -29,27 +30,28 @@ func main() {
 }
 
 func run() error {
-	if err := godotenv.Load(); err != nil {
-		log.Println(".env file not found, using environment variables")
+	if err := godotenv.Load(); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("load .env: invalid or unreadable file")
 	}
-	logger, logFile, err := app.NewLogger()
+	cfg, err := config.Load()
+	if err != nil {
+		return fmt.Errorf("configuration: %w", err)
+	}
+	logger, logFile, err := app.NewLogger(cfg.LogFile, cfg.LogLevel)
 	if err != nil {
 		return fmt.Errorf("create logger: %w", err)
 	}
 	defer func() {
-		if err := logFile.Close(); err != nil {
-			log.Printf("close log file: %v", err)
+		if logFile != nil {
+			if err := logFile.Close(); err != nil {
+				log.Printf("close log file: %v", err)
+			}
 		}
 	}()
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
-	dbConfig := repository.Config{
-		Host: config.Env("DB_HOST", "localhost"), Port: config.EnvInt("POSTGRES_PORT", 6545),
-		User: config.Env("POSTGRES_USER", "postgres"), Password: config.Env("POSTGRES_PASSWORD", "password"),
-		DBName: config.Env("POSTGRES_DB", "sharetrip-contract"), SSLMode: config.Env("DB_SSLMODE", "disable"),
-	}
-	pool, err := repository.NewPool(ctx, dbConfig.DSN())
+	pool, err := repository.NewPool(ctx, cfg.DatabaseDSN)
 	if err != nil {
 		return fmt.Errorf("create postgres pool: %w", err)
 	}
@@ -63,7 +65,7 @@ func run() error {
 	application.Use(swagger.New(swagger.Config{
 		BasePath: "/", FilePath: "./api/contract.yaml", Path: "docs", Title: "ShareTrip Contract API",
 	}))
-	server.Route(application.Group(""))
+	server.Route(application.Group(""), cfg.RequestTimeout)
 	shutdownDone := make(chan struct{})
 	go func() {
 		defer close(shutdownDone)
@@ -72,7 +74,7 @@ func run() error {
 			logger.Error("shutdown HTTP server", "error", err)
 		}
 	}()
-	err = application.Listen(":" + config.Env("HTTP_PORT", "4002"))
+	err = application.Listen(":" + cfg.HTTPPort)
 	stop()
 	<-shutdownDone
 	if err != nil {

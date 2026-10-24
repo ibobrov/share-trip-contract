@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ibobrov/share-trip-contract/internal/api"
@@ -93,6 +94,6 @@ func runTests(m *testing.M) int {
 	testApp = fiber.New(fiber.Config{ErrorHandler: api.ErrorHandler})
 	logger := slog.New(slog.NewJSONHandler(io.Discard, nil))
 	testApp.Use(middleware.Correlation(logger))
-	server.Route(testApp.Group(""))
+	server.Route(testApp.Group(""), 2*time.Second)
 	return m.Run()
 }
