@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ibobrov/share-trip-contract/internal/observability/logctx"
 	"github.com/ibobrov/share-trip-contract/internal/repository/entity"
 	"github.com/jackc/pgx/v5"
 )
@@ -35,6 +36,7 @@ func (u *ContractUseCase) CheckOption(ctx context.Context, tx pgx.Tx, req CheckO
 	if err != nil {
 		return nil, fmt.Errorf("get contract for option: %w", err)
 	}
+	logctx.Logger(ctx).Debug("active contract loaded", "component", "ContractUseCase", "operation", "LoadContract", "contract_id", contract.ID)
 	now := time.Now().UTC()
 	result := evaluateOption(contract, req.OptionCode, now)
 	return &result, nil

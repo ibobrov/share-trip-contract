@@ -211,3 +211,16 @@ make test
 Манифесты этого сервиса находятся там же: `k8s/contract-config.yaml`,
 `k8s/contract-secret.example.yaml`, `k8s/contract-deployment.yaml`.
 Для локального запуска используется `.env.example`; реальные секреты в Git не сохраняются.
+
+## Наблюдаемость процесса публикации
+
+Сервис читает `APP_ENV` и `OTEL_EXPORTER_OTLP_ENDPOINT`; в Kubernetes Collector находится
+по адресу `otel-collector:4318`. Метрики доступны без токена на `GET /metrics`.
+Логи содержат service, operation, request_id/correlation_id, trace_id и доступные бизнес-ID.
+Полный payload события, токены и DSN в логи не записываются.
+
+HTTP-проверка прав продолжает входящий trace context и переданные идентификаторы процесса.
+Метрики: `contract_permission_check_total`, `contract_permission_check_duration_seconds`,
+`contract_http_requests_total`. Result различает allowed, denied и error.
+
+Dashboard и инструкция расследования находятся в репозитории share-trip: `docs/observability.md`.

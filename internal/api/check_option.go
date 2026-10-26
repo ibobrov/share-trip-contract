@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Server) CheckOption(c *fiber.Ctx) error {
-	logger := handlerLogger(c, "CheckOption")
+	logger := handlerLogger(c, "CheckPermission")
 	var req gen.CheckOptionRequest
 	if ok, err := ParseAndValidateRequest(&req, c, logger); !ok {
 		return err
@@ -17,13 +17,17 @@ func (s *Server) CheckOption(c *fiber.Ctx) error {
 		OptionCode: string(req.OptionCode),
 	})
 	if err != nil {
-		return HandleError(c, err)
+		return HandleError(c, logger, err)
 	}
 	response := gen.CheckOptionResponse{Allowed: res.Allowed}
 	if res.Reason != nil {
 		reason := gen.CheckOptionResponseReason(*res.Reason)
 		response.Reason = &reason
 	}
-	logger.Info("option checked")
+	result := "denied"
+	if res.Allowed {
+		result = "allowed"
+	}
+	logger.Info("option checked", "company_id", req.CompanyID, "option_code", req.OptionCode, "result", result)
 	return Success(c, response)
 }

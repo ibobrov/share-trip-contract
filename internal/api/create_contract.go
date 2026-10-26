@@ -23,7 +23,7 @@ func (s *Server) CreateContract(c *fiber.Ctx) error {
 		Options:   options,
 	})
 	if err != nil {
-		return HandleError(c, err)
+		return HandleError(c, logger, err)
 	}
 	responseOptions := make(gen.ContractOptions, 0, len(res.Options))
 	for _, code := range res.Options {
@@ -32,7 +32,7 @@ func (s *Server) CreateContract(c *fiber.Ctx) error {
 		})
 	}
 
-	logger.Info("contract created")
+	logger.Info("contract created", "result", "success", "contract_id", res.ID, "company_id", res.CompanyID)
 	return SuccessWithHttpStatus(c, fiber.StatusCreated, gen.CreateContractResponse{
 		ID:        res.ID,
 		CompanyID: res.CompanyID,

@@ -16,7 +16,7 @@ func (s *Server) GetActiveContract(c *fiber.Ctx) error {
 		CompanyID: req.CompanyID,
 	})
 	if err != nil {
-		return HandleError(c, err)
+		return HandleError(c, logger, err)
 	}
 	responseOptions := make(gen.ContractOptions, 0, len(res.Options))
 	for _, code := range res.Options {
@@ -25,7 +25,7 @@ func (s *Server) GetActiveContract(c *fiber.Ctx) error {
 		})
 	}
 
-	logger.Info("active contract retrieved")
+	logger.Info("active contract retrieved", "result", "success", "contract_id", res.ID, "company_id", res.CompanyID)
 	return Success(c, gen.GetActiveContractResponse{
 		ID:        res.ID,
 		CompanyID: res.CompanyID,

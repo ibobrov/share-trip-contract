@@ -16,9 +16,9 @@ func (s *Server) ActivateContract(c *fiber.Ctx) error {
 		ID: req.ID,
 	})
 	if err != nil {
-		return HandleError(c, err)
+		return HandleError(c, logger, err)
 	}
-	logger.Info("contract activated")
+	logger.Info("contract activated", "result", "success", "contract_id", res.ID)
 	return SuccessWithHttpStatus(c, fiber.StatusCreated, gen.ActivateContractResponse{
 		ID: res.ID,
 	})

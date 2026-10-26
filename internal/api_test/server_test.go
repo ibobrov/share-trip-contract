@@ -89,7 +89,7 @@ func runTests(m *testing.M) int {
 	defer testPool.Close()
 	contractRepository := repository.NewContractRepository()
 	contractUseCase := domain.NewContractUseCase(contractRepository)
-	contractService := service.NewContractService(testPool, contractUseCase)
+	contractService := service.NewContractService(testPool, contractUseCase, nil)
 	server := api.NewServer(contractService)
 	testApp = fiber.New(fiber.Config{ErrorHandler: api.ErrorHandler})
 	logger := slog.New(slog.NewJSONHandler(io.Discard, nil))

@@ -36,10 +36,15 @@ func ParseAndValidateRequest[T any](request *T, c *fiber.Ctx, logger *slog.Logge
 		}
 	}
 	if err != nil {
-		logger.Warn("invalid request body", slog.Any("error", err), slog.String("layer", "validation"))
+		logger.Warn("invalid request body", slog.String("reason", "invalid_json"), slog.String("result", "validation_error"))
 		return false, FailureWithHttpStatus(c, fiber.StatusBadRequest, "Некорректное тело запроса.")
 	}
 	if _, err := govalidator.ValidateStruct(*request); err != nil {
+		fields := make([]string, 0)
+		for field := range govalidator.ErrorsByField(err) {
+			fields = append(fields, field)
+		}
+		sort.Strings(fields)
 		fieldErrors := govalidator.ErrorsByField(err)
 		validationErrors := make([]string, 0, len(fieldErrors))
 		for _, message := range fieldErrors {
@@ -50,7 +55,7 @@ func ParseAndValidateRequest[T any](request *T, c *fiber.Ctx, logger *slog.Logge
 		}
 		sort.Strings(validationErrors)
 
-		logger.Warn("request validation failed", slog.Any("errors", validationErrors))
+		logger.Warn("request validation failed", slog.Any("fields", fields), slog.String("result", "validation_error"))
 		return false, FailureWithHttpStatus(c, fiber.StatusBadRequest, validationErrors...)
 	}
 
@@ -58,5 +63,5 @@ func ParseAndValidateRequest[T any](request *T, c *fiber.Ctx, logger *slog.Logge
 }
 
 func handlerLogger(c *fiber.Ctx, operation string) *slog.Logger {
-	return logctx.Logger(c.UserContext()).With(slog.String("server", "ContractServer"), slog.String("handler", operation))
+	return logctx.Logger(c.UserContext()).With(slog.String("component", "ContractServer"), slog.String("operation", operation))
 }
